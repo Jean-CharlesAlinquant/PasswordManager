@@ -4,6 +4,29 @@ from random import randint, choice, shuffle
 import pyperclip
 import json
 
+# ---------------------------- FIND PASSWORD ------------------------------- #
+
+
+def find_password():
+    website = website_entry.get()
+
+    if len(website) == 0:
+        messagebox.showinfo(title="Oops", message="Please enter a web site to search")
+    else:
+        try:
+            with open("data.json", "r") as data_file:
+                data = json.load(data_file)
+        except FileNotFoundError:
+            messagebox.showinfo(title="Error", message="No data file found.")
+        else:
+            if website in data:
+                username = data[website]["username"]
+                password = data[website]["password"]
+                messagebox.showinfo(title=website, message=f"Username: {username} "
+                                                           f"\nPassword: {password}")
+            else:
+                messagebox.showinfo(title="Error", message=f"No details for {website} exists.")
+
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 
 
@@ -83,9 +106,11 @@ canvas.grid(row=0, column=1)
 # Row 1
 website_label = Label(text="Website:")
 website_label.grid(row=1, column=0)
-website_entry = Entry(width=35)
-website_entry.grid(row=1, column=1, columnspan=2)
+website_entry = Entry(width=21)
+website_entry.grid(row=1, column=1)
 website_entry.focus()
+search_btn = Button(text="Search", width=13, command=find_password)
+search_btn.grid(row=1, column=2)
 
 # Row 2
 username_label = Label(text="Email/Username:")
